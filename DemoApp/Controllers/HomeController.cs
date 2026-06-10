@@ -15,6 +15,7 @@ namespace DemoApp.Controllers
 
         public IActionResult Index()
         {
+
             Console.WriteLine("t");
             return View();
         }
