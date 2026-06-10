@@ -1,0 +1,32 @@
+stages:
+  - build
+  - publish
+
+variables:
+  DOTNET_VERSION: '8.0'
+
+cache:
+  paths:
+    - .nuget/
+
+build:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}
+  script:
+    - dotnet restore DemoApp/DemoApp.csproj --packages .nuget
+    - dotnet build DemoApp/DemoApp.csproj -c Release --no-restore
+  artifacts:
+    paths:
+      - DemoApp/bin/Release/
+    expire_in: 1 hour
+
+publish:
+  stage: publish
+  image: mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}
+  script:
+    - dotnet publish DemoApp/DemoApp.csproj -c Release -o publish
+  artifacts:
+    paths:
+      - publish/
+  only:
+    - main
